@@ -42,12 +42,14 @@ $$
 The cost function is the function to be minimized in the fit procedure. In our script we use a least-square fit, and the cost function is
 
 $$
-\chi^2_\text{mixed}(M, \Gamma, \Gamma_{ee}, \mathcal{F}_{\omega\pi^0}, C, \phi, S_E, f) = 
+\begin{aligned}
+&\chi^2_\text{mixed}(M, \Gamma, \Gamma_{ee}, \mathcal{F}_{\omega\pi^0}, C, \phi, S_E, f) \notag \\
+    &= 
     \sum_{i = 1}^{24}
     \bigg (
     \frac{\sigma^\text{obs}(W_i; M, \Gamma, \Gamma_{ee}, \mathcal{F}_{\omega\pi^0}, C, \phi, S_E) - f \cdot \sigma^\text{mea}_i}{\Delta \sigma^\text{mea}_i}
     \bigg )^2 \notag \\
-    + \sum_{i = 1}^{24}
+    &+ \sum_{i = 1}^{24}
     \bigg (
     \frac{W_i - W_i^\text{Prop.}}{\Delta W_i}
     \bigg )^2 
@@ -56,8 +58,8 @@ $$
     \bigg )^2 
     + \bigg ( 
     \frac{M - \overline{M}}{\Delta M} 
-    \bigg )^2 
-    + 
+    \bigg )^2 \notag \\
+    &+ 
     \bigg (
     \frac{\Gamma - \overline{\Gamma}}{\Delta \Gamma}
     \bigg )^2 
@@ -69,6 +71,7 @@ $$
     \bigg (
     \frac{f - 1}{\Delta f}
     \bigg )^2, 
+\end{aligned}
 $$
 
 where the subscript `mixed` means the amplitude `C` is set to float. If a process is asuumed to have only EM contribution to its resonance decay amplitude, `C = 1`. Otherwise `C` has to be extracted from the fit. 
