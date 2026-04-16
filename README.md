@@ -40,6 +40,7 @@ $$
 
 ## Cost Function
 The cost function is the function to be minimized in the fit procedure. In our script we use a least-square fit, and the cost function is
+
 $$
 \chi^2_\text{mixed}(M, \Gamma, \Gamma_{ee}, \mathcal{F}_{\omega\pi^0}, C, \phi, S_E, f) = 
     \sum_{i = 1}^{24}
@@ -69,5 +70,6 @@ $$
     \frac{f - 1}{\Delta f}
     \bigg )^2, 
 $$
+
 where the subscript `mixed` means the amplitude `C` is set to float. If a process is asuumed to have only EM contribution to its resonance decay amplitude, `C = 1`. Otherwise `C` has to be extracted from the fit. 
 * There are nuisance parameters (NP) for the external measurements of quantities $W_i, S_E, M, \Gamma, \Gamma_{ee}, f$. $f$ is the NP reponsible for correlated systematic uncertainty, which can be modified in `para.txt`. The central values and uncertainties of other quantities can be modified in `headers/variables.h`.
