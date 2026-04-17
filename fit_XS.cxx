@@ -95,16 +95,6 @@ int main()
     gMinuit->mnparm(8, "SE", vstart[8], step[8], 0.00079,    0.00115,   ierflg);
     gMinuit->mnparm(9, "f", vstart[9], step[9], 0.8,    1.2,   ierflg);
 
-    // gMinuit->mnparm(0, "M", vstart[0], step[0], 3.09,    3.10,   ierflg);	
-    // gMinuit->mnparm(1, "CC1", vstart[1], step[1], 2.00,    3.05,   ierflg);
-    // gMinuit->mnparm(2, "CC2 ", vstart[2], step[2], 0,    60,   ierflg);
-    // gMinuit->mnparm(3, "FF ", vstart[3], step[3], 0.1,     0.4,   ierflg);
-    // gMinuit->mnparm(4, "phi1", vstart[4], step[4], -PI,    PI,   ierflg);	
-	// gMinuit->mnparm(5, "phi2", vstart[5], step[5], -PI,    0,   ierflg);
-    // gMinuit->mnparm(6, "SE", vstart[6], step[6], 0.00079,    0.00090,   ierflg);
-
-    // gMinuit->mnparm(6, "f", vstart[6], step[6], 0,    1.1,   ierflg);		
-
 	gMinuit->FixParameter(2);
 	// gMinuit->FixParameter(1);
     gMinuit->FixParameter(5);
@@ -177,31 +167,7 @@ int main()
     }
     
 
-    // points txt file for Ana
-    // ofstream pointsFile("getpoint_Ana.txt");
-    // for(double i=startW;i<endW;i=i+step)
-    // {
-    //      pointsFile <<setprecision(15)<< i <<"\t"<<Ana(i,fittedParr[0], fittedParr[1], fittedParr[2], fittedParr[3], fittedParr[4], fittedParr[5])<<endl;
-    // }
-    // ofstream pointsFile_con("getpoint_Ana_con.txt");
-    // for(double i=startW;i<endW;i=i+step)
-    // {
-    //      pointsFile_con <<setprecision(15)<< i <<"\t"<<Ana_component(i,fittedParr[0], fittedParr[1], fittedParr[2], fittedParr[3], fittedParr[4], fittedParr[5], "con")<<endl;
-    // }
-    // ofstream pointsFile_res("getpoint_Ana_res.txt");
-    // for(double i=startW;i<endW;i=i+step)
-    // {
-    //      pointsFile_res <<setprecision(15)<< i <<"\t"<<Ana_component(i,fittedParr[0], fittedParr[1], fittedParr[2], fittedParr[3], fittedParr[4], fittedParr[5], "res")<<endl;
-    // }
-    // ofstream pointsFile_int("getpoint_Ana_int.txt");
-    // for(double i=startW;i<endW;i=i+step)
-    // {
-    //      pointsFile_int <<setprecision(15)<< i <<"\t"<<Ana_component(i,fittedParr[0], fittedParr[1], fittedParr[2], fittedParr[3], fittedParr[4], fittedParr[5], "int")<<endl;
-    // }
-
-    // points txt file for dressed cross sections.
-    // dressed def: sigma_born_dressed(double W, double psi, double A, double C, double vaccV, double MJ, TString mode, bool useqf=false)
-    // modes: total, con, res, int, int_alt
+    // points txt file output
     ofstream dressedXSFile("output/getpoint_dressed.txt");
     for(double i=startW;i<endW;i=i+step)
     {
@@ -262,21 +228,6 @@ int main()
         fittedMshift = fittedMvalue - xdata[i];
         outFileM << setprecision(15) << fittedMvalue << "\t" << fittedMerror << "\t" << desEnergy[i] << "\t" << dEnergy[i] << "\t" << fittedMshift << endl;
     }
-    // ofstream xsUserFile("xs_user.dat");
-    // double startW_user = 3.045;
-    // double endW_user = 3.125;
-    // int nW_user = 999;
-    // double step_user = (endW_user - startW_user) / (nW_user-1);
-    // for(double i=2.98;i<3.20;i+=1e-5)
-    // {
-    //     xsUserFile <<setprecision(15)
-    //     << Form("%-12.6f", i)
-    //     <<"    "
-    //     << Form("%14.6f", Ana(i,parr[0], parr[1], parr[2], parr[3], parr[4], parr[5]) )
-    //     //<< Form("%14.6f", Conv(i, parr) )
-    //     <<"    "<< "0.0" <<endl;
-    //     //Ana(double x, double M,double CC1, double CC2, double FF,double phi1,double phi2)
-    // }
 
     // Calculate Br and BrEM with propagated uncertainties
     BrErr::Result brRes   = BrErr::CalcBrAndErr(gMinuit, fittedParr, numPara);

@@ -3,6 +3,19 @@
 
 ## How to use
 * Put your signal event number measurement results, as well as other quantities like the efficiencies, luminosities, and uncertainties, in `data/para.txt`
+* Change the variables in `headers/variables.h` to match your channel. Recommended variables to change are:
+  * `hbar_c_2`: Overall normalization factor if you want unit conversion.
+  * `Wm`: The energy cut when generating the signal MC sample.
+  * `mo` and `mp`: masses of two final-state mesons. Here the default values are for $\omega$ and $\pi^0$.
+  * `B1` and `B2`: branching ratios. By default they are for processes $\pi^0\to2\gamma$ and $\omega\to3\pi$. If your channel has a different event topology, you should not only modify these two branching ratios, but also possibly add more and change the cross section calculation formula in `headers/loadFile.C`, specifically those for calculating `ydata[i]` and `yerrsta[i]`.
+  * `SE_mean` and `SE_std`: Central value and uncertainty for beam energy spread measurement.
+  * `Gamma_mean` and `Gamma_std`: Central value and uncertainty for the parent particle decay width.
+  * `Br_ee_mean` and `Br_ee_std`: Central value and uncertainty for the branching ratio of parent particle to $e^+e^-$.
+  * `MJpsi_mean` and `MJpsi_std`: Central value and uncertainty for the parent particle mass.
+  * `q0Corr_2body` ~ `q5Corr_2body`: Phase space factor expansion coefficients. See below.
+  * `Br_mean` and `Br_std`: The external branching ratio measurement result of the process. It can be used as a constraint when constructing the cost fucntion, but by default it is disabled.
+  * `Arsize`: Number of energy points used as in your `para.txt`.
+  * `numPara`: Number of parameters used in construction of cost function, as in the construction of `gMinuit` variables in `fit_XS.cxx`.
 * Change the vaccum polarization file `vaccFile/vacc_nojpsi.dat` if you are not working near $J/\psi$ resonance energy
 * Do `make`, and then do `./fit_XS`.
 
