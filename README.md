@@ -37,6 +37,9 @@ $$
 
 * <span style="color:red;">!!!NOTE!!!</span>: We use an analytic formula to calculate the ISR correction, but the effect from $q_f$ is considered by Taylor-expanding it into power series of $(W-W_\mathrm{min})$ and then truncate at 5th order, then calculate the $\sigma^{\text{ISR}}$ as the sum of 0th to 5th order corrections. <span style="color:red;">So please modify the `q0Corr_2body` - `q5Corr_2body` variables in `headers/variables.h` if you use a different final state!!!</span>
 * If you want to turn off the correction, simply set `q0Corr_2body` to the $q_f$ value calculated using quantities from your final state and then set others to 0.
+* Also, by default the $W^{-8}$ dependence of Born cross section is implemented, as in the first equation. Within the ISR integral bases we currently have, the $W^{-7}$ and $W^{-6}$ dependencies are also available. You can change to models with these dependencies by modifying the `Ana` function in `headers/physicsFuncs.h`, by uncommenting the corresponding lines.
+* Besides, by default we use an energy cut $W_\mathrm{min} = 2.8$ GeV. This should also be modified to the threshold you use.
+* You can change the cost function by modifying the `fcn` function in `headers/variables.h`.
 
 ## Cost Function
 The cost function is the function to be minimized in the fit procedure. In our script we use a least-square fit, and the cost function is
