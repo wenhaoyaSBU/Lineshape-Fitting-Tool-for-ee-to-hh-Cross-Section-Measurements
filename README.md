@@ -76,3 +76,13 @@ $$
 
 where the subscript `mixed` means the amplitude `C` is set to float. If a process is asuumed to have only EM contribution to its resonance decay amplitude, `C = 1`. Otherwise `C` has to be extracted from the fit. 
 * There are nuisance parameters (NP) for the external measurements of quantities $W_i, S_E, M, \Gamma, \Gamma_{ee}, f$. $f$ is the NP reponsible for correlated systematic uncertainty, which can be modified in `para.txt`. The central values and uncertainties of other quantities can be modified in `headers/variables.h`.
+
+
+## Formula Notes
+* In the directory `notes` there are three PDF files, explaining the formula used in the codes. 
+* The main note is `ISR_Integral_W_neg8.pdf` which explains how we expand the 2-body phase space factor in VP decays $q_f^3$ into power series in our calculation, and how to decompose the ISR integral into different integral bases. (We do this expansion because it is ensured that the ISR integral with Born cross section having integer $W$ dependence in the prefactor will have a closed-form analytic expression in terms of special functions.)
+* The note `ISR_Basis_Extension.pdf` gives analytic formula for the bases integrals.
+* The note `PropagatorIntegral.pdf` gives the derivation of propagator-related ISR basis integral, in which the Appell's hypergeometric funcition $F_1$ is inevitable. The evaluation of $F_1$ involves a double series, which takes up most of the computation time. In this note we try to find a way that is the most efficient to evaluate this integral.
+
+## Acknowledgment
+Wenhao Ya would like to thank Zhikun Xi, Yiqi Du, Baoxin Liu, Yanning Wang, Guangbao Sun, Xiang Zhou, and Zhenyu Zhang, for their pioneering work in finding the analytic form of ISR integrals and the fitting code construction, as well as the valuable discussions regarding this project.
