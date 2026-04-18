@@ -22,7 +22,7 @@
 
 ## Outputs
 * `output/calculated_xs_data.txt`: Calculated cross section from your input `para.txt` at each energy point.
-* `output/getpoint*.txt`: Fitted cross section (in $\mathrm{pb}^{-1}$) at C.O.M energy grid points. Can be used to draw the fitting result.
+* `output/getpoint*.txt`: Fitted cross section (in $\mathrm{pb}$) at C.O.M energy grid points. Can be used to draw the fitting result.
 * `output/fitted*.txt`: The post-fit parameters and their uncertainties, defined in the construction of `gMinuit` in `fit_XS.cxx`.
 
 
