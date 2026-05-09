@@ -1,13 +1,4 @@
 {
-    ifstream vacc_file;
-	// vacc_file.open("data/vacc_nojpsi.dat");
-	vacc_file.open("/home/tomori/BESIII/myCodes/radInts/vaccFile/vacc_nojpsi.dat");
-	 for(int i=0;i<vaccsize;i++)
-		    {
-			    vacc_file>>Evac[i]>>CSvac[i];
-			}
-    interpolator.SetData(vaccsize, Evac, CSvac);
-
     ifstream input_file;
     input_file.open("data/para.txt");
     int num_val=0;
@@ -42,7 +33,7 @@
     }
     // output_file.close();
 
-    // vaccum polarization correction
+    // vacuum polarization correction
     vpLocal.enable_vp = true;
     vaccFunc::InitVacc();
     vpLocal.vacc_func = vaccFunc::Vacc_from_table;

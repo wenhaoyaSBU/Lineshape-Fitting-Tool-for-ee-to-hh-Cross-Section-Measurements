@@ -171,31 +171,31 @@ int main()
     ofstream dressedXSFile("output/getpoint_dressed.txt");
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], interpolator.Eval(i), fittedParr[0], "total", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "total", true);
         dressedXSFile <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_con("output/getpoint_dressed_con.txt");
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], interpolator.Eval(i), fittedParr[0], "con", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "con", true);
         dressedXSFile_con <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_res("output/getpoint_dressed_res.txt");
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], interpolator.Eval(i), fittedParr[0], "res", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "res", true);
         dressedXSFile_res <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_int("output/getpoint_dressed_int.txt");
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], interpolator.Eval(i), fittedParr[0], "int", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "int", true);
         dressedXSFile_int <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_intalt("output/getpoint_dressed_int_alt.txt");
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], interpolator.Eval(i), fittedParr[0], "int_alt", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "int_alt", true);
         dressedXSFile_intalt <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     // gammagg component
@@ -204,7 +204,7 @@ int main()
         ofstream dressedXSFile_res_gammagg("output/getpoint_dressed_res_gammagg.txt");
         for(double i=startW;i<endW;i=i+step)
         {
-            double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], Cgammagg, interpolator.Eval(i), fittedParr[0], "res", true);
+            double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], Cgammagg, vacc(i), fittedParr[0], "res", true);
             dressedXSFile_res_gammagg <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
         }
     }

@@ -16,7 +16,8 @@
   * `Br_mean` and `Br_std`: The external branching ratio measurement result of the process. It can be used as a constraint when constructing the cost fucntion, but by default it is disabled.
   * `Arsize`: Number of energy points used as in your `para.txt`.
   * `numPara`: Number of parameters used in construction of cost function, as in the construction of `gMinuit` variables in `fit_XS.cxx`.
-* Change the vaccum polarization file `vaccFile/vacc_nojpsi.dat` if you are not working near $J/\psi$ resonance energy
+* The vacuum-polarization table is read by `vaccFunc::InitVacc()` in `headers/loadFile.C`. By default it uses `vaccFile/vacc_nojpsi.dat`, so place your VP table there if you want to keep the default setup. The file should contain two whitespace-separated columns: center-of-mass energy in GeV and the corresponding `Vacc = 1/|1-\Pi_0|^2` value. The number of table rows is read automatically from the file.
+* To use a different vacuum-polarization file path, change the call in `headers/loadFile.C` from `vaccFunc::InitVacc();` to, for example, `vaccFunc::InitVacc("path/to/your_vacc_file.dat");`.
 * Do `make`, and then do `./fit_XS`.
 
 
@@ -34,7 +35,7 @@ where $q_f$ is a dimensionless quantity relevant to the momentum of the final st
 $$
 q_f = \sqrt{\left(1+\frac{m_{\omega}^2 - m_{\pi^0}^2}{W^2}\right)^2 - \frac{4m_{\omega}^2}{W^2}}.
 $$
-After considering vaccum polarization effects, the continuum amplitude gets modified and the width $\Gamma_{ee}$ becomes the "physical" value
+After considering vacuum polarization effects, the continuum amplitude gets modified and the width $\Gamma_{ee}$ becomes the "physical" value
 $$
 \sigma^{\text{dressed}}(W; M, \Gamma, \Gamma_{ee}, \mathcal{F}_{\omega\pi^0}, C, \phi) = \frac{\pi \alpha^2}{6}\left(\frac{\mathcal{F}_{\omega\pi^0}}{W^4}\right)^2 q_f^3 \bigg |\frac{1}{|1-\Pi_0(W)|} + \frac{3W^2\Gamma_{ee}}{M\alpha(W^2-M^2+iM\Gamma)}Ce^{i\phi}\bigg |^2 ,
 $$

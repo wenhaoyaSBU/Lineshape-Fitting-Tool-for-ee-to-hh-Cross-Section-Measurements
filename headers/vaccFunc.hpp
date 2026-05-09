@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
+#include <memory>
 
 namespace vaccFunc {
 
@@ -14,8 +15,6 @@ namespace vaccFunc {
     if (!fin.is_open()) throw std::runtime_error("Failed to open vacc file.");
 
     std::vector<double> E, V;
-    E.reserve(60000);
-    V.reserve(60000);
 
     double e, v;
     while (fin >> e >> v) {
@@ -45,5 +44,12 @@ namespace vaccFunc {
     if (W < Wmin) W = Wmin;
     if (W > Wmax) W = Wmax;
     return tab->Eval(W); // must be Vacc = 1/|1-Pi0|^2
+  }
+
+  inline double Eval(double W) {
+    if (!interp) {
+      throw std::runtime_error("Vacc table is not initialized. Call vaccFunc::InitVacc first.");
+    }
+    return Vacc_from_table(W, interp.get());
   }
 }

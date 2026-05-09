@@ -127,14 +127,11 @@ namespace gh128 {
 
 } // namespace gh128
 
-
-
-ROOT::Math::Interpolator interpolator(ROOT::Math::Interpolation::kLINEAR);
 using namespace std;
 
 double vacc(double W)
 {
-	    return interpolator.Eval(W);
+	    return vaccFunc::Eval(W);
 }
 
 complex<double> LI2(complex<double> z)

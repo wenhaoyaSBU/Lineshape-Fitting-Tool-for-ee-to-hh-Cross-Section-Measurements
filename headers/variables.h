@@ -83,7 +83,6 @@ const int Arsize=24; // 能量点个数
 // const int numPara = 8;      // FOR GOD SAKE STOP HARDCODING!!!!!
 const int numPara = 10;
 const int Param=Arsize + numPara; // energy pull terms + fitting params
-// const int vaccsize = 53000;
 
 double xdata[Arsize] = {0};
 double Nob[Arsize] =            {0};
@@ -107,9 +106,6 @@ double Lerr[Arsize]={0};
 double desEnergy[Arsize]={0};
 double vstart[Param]={0};//0-3 fitting params  4-14:M  15-25:SE
 double step[Param]={0};
-const int vaccsize = 53000;
-double Evac[vaccsize]={0};
-double CSvac[vaccsize]={0};
 
 
 
