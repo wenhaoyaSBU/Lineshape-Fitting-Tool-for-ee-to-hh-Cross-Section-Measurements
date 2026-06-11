@@ -501,8 +501,11 @@ double Ana(double W, double M,double CC1, double CC2, double FF,double phi1,doub
     isr_sigma2body::Consts consts2body;
     consts.Gamma = GammaVar;
     consts.Gamma_ee = Gamma_eeVar;
+    consts.Wmin = Wm;
     consts2body.Gamma = GammaVar;
     consts2body.Gamma_ee = Gamma_eeVar;
+    consts2body.Wmin = Wm;
+
     // auto calcRes = isr_sigma5pi::sigma5pi_ISR_qf3(W, M, FF, CC1, CC2, phi1, phi2, q0Corr, q1Corr, q2Corr, q3Corr, consts, isr_i0i4::Options{}, isr6::Options{}, vpLocal);
     // auto calcRes = isr_sigma2body::sigma2body_ISR_qf3(W, M, FF, CC1, CC2, phi1, phi2, q0Corr, q1Corr, q2Corr, q3Corr, consts2body, isr_i0i11::Options{}, vpLocal);
     
@@ -679,6 +682,7 @@ void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
     {   
         double errorTot = sqrt(yerrsta[i] * yerrsta[i] + yerrsysuncor[i] * yerrsysuncor[i]);
         chisq = chisq+pow((ydata[i]-fCorr*Conv(par[i+total],arr))/errorTot,2); // Considering uncorr. and sta. syst.
+        // chisq = chisq+pow((fCorr*ydata[i]-Conv(par[i+total],arr))/errorTot,2); // Alternative way
     }
 
     for (Int_t i= 0; i < Arsize; i++) 
