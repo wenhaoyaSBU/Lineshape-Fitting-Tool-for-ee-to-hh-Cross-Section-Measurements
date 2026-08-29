@@ -49,7 +49,8 @@ double sigma_born_dressed(double W, double psi, double A, double C, double vaccV
     double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2);       //W^-8
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W;       //W^-7
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W*W;       //W^-6
-    complex<double> amp = vaccV + C * 3 * W * W * Gamma_var_ee * exp(complex<double>(0, psi)) /
+    double sqrtvaccV = sqrt(vaccV);
+    complex<double> amp = sqrtvaccV + C * 3 * W * W * Gamma_var_ee * exp(complex<double>(0, psi)) /
                           (alpha * MJ * (pow(W, 2) - pow(MJ, 2) + complex<double>(0, MJ * Gamma_var)));
     double ampMod2 = pow(abs(amp), 2);
     return norm * cont * ampMod2 * pow(qf,3);
@@ -68,9 +69,10 @@ double sigma_born_dressed(double W, double psi, double A, double C, double vaccV
     double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2);       //W^-8
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W;       //W^-7
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W*W;       //W^-6
-    complex<double> amp_total = vaccV + C * 3 * W * W * Gamma_var_ee * exp(complex<double>(0, psi)) /
+    double sqrtvaccV = sqrt(vaccV);
+    complex<double> amp_total = sqrtvaccV + C * 3 * W * W * Gamma_var_ee * exp(complex<double>(0, psi)) /
                           (alpha * MJ * (pow(W, 2) - pow(MJ, 2) + complex<double>(0, MJ * Gamma_var)));
-    complex<double> amp_cont = vaccV;
+    complex<double> amp_cont = sqrtvaccV;
     complex<double> amp_res = amp_total - amp_cont;
 
     double ampMod2_total = pow(abs(amp_total), 2);
