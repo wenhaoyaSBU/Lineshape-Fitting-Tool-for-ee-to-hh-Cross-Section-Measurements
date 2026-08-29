@@ -501,9 +501,11 @@ double Ana(double W, double M,double CC1, double CC2, double FF,double phi1,doub
     isr_sigma2body::Consts consts2body;
     consts.Gamma = GammaVar;
     consts.Gamma_ee = Gamma_eeVar;
+    consts.Gamma_mumu = Gamma_eeVar;  // Apply lepton universality
     consts.Wmin = Wm;
     consts2body.Gamma = GammaVar;
     consts2body.Gamma_ee = Gamma_eeVar;
+    consts2body.Gamma_mumu = Gamma_eeVar;  // Apply lepton universality
     consts2body.Wmin = Wm;
 
     // auto calcRes = isr_sigma5pi::sigma5pi_ISR_qf3(W, M, FF, CC1, CC2, phi1, phi2, q0Corr, q1Corr, q2Corr, q3Corr, consts, isr_i0i4::Options{}, isr6::Options{}, vpLocal);
@@ -527,10 +529,14 @@ double Ana_component(double W, double M,double CC1, double CC2, double FF,double
     isr_sigma5pi::Consts consts;
     consts.Gamma = GammaVar;
     consts.Gamma_ee = Gamma_eeVar;
+    consts.Gamma_mumu = Gamma_eeVar;  // Apply lepton universality
+    consts.Wmin = Wm;
     // auto calcRes = isr_sigma5pi::sigma5pi_ISR_qf3(W, M, FF, CC1, CC2, phi1, phi2, q0Corr, q1Corr, q2Corr, q3Corr, consts, isr_i0i4::Options{}, isr6::Options{}, vpLocal);
     isr_sigma2body::Consts consts2body;
     consts2body.Gamma = GammaVar;
     consts2body.Gamma_ee = Gamma_eeVar;
+    consts2body.Gamma_mumu = Gamma_eeVar;  // Apply lepton universality
+    consts2body.Wmin = Wm;
     auto calcRes = isr_sigma2body::sigma2body_ISR_qf5(W, M, FF, CC1, CC2, phi1, phi2, q0Corr_2body, q1Corr_2body, q2Corr_2body, q3Corr_2body, q4Corr_2body, q5Corr_2body, consts2body, isr_i0i11::Options{}, vpLocal);
     if(component == "total"){
         return calcRes.sigma;

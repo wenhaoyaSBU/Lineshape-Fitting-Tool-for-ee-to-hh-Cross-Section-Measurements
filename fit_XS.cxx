@@ -208,35 +208,37 @@ int main(int argc, char** argv)
     }
     
 
+    double fitted_Gamma = fittedParr[6];
+    double fitted_Gamma_ee = fittedParr[7];
     // points txt file output
     ofstream dressedXSFile(outD + gpt_dressed);
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "total", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], fitted_Gamma, fitted_Gamma_ee, "total", true);
         dressedXSFile <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_con(outD + gpt_dressed_con);
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "con", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], fitted_Gamma, fitted_Gamma_ee, "con", true);
         dressedXSFile_con <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_res(outD + gpt_dressed_res);
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "res", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], fitted_Gamma, fitted_Gamma_ee, "res", true);
         dressedXSFile_res <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_int(outD + gpt_dressed_int);
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "int", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], fitted_Gamma, fitted_Gamma_ee, "int", true);
         dressedXSFile_int <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     ofstream dressedXSFile_intalt(outD + gpt_dressed_int_alt);
     for(double i=startW;i<endW;i=i+step)
     {
-        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "int_alt", true);
+        double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], fitted_Gamma, fitted_Gamma_ee, "int_alt", true);
         dressedXSFile_intalt <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     // gammagg component
@@ -246,7 +248,7 @@ int main(int argc, char** argv)
         ofstream dressedXSFile_res_gammagg("output/getpoint_dressed_res_gammagg.txt");
         for(double i=startW;i<endW;i=i+step)
         {
-            double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], Cgammagg, vacc(i), fittedParr[0], "res", true);
+            double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], Cgammagg, vacc(i), fittedParr[0], fitted_Gamma, fitted_Gamma_ee, "res", true);
             dressedXSFile_res_gammagg <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
         }
     }

@@ -38,7 +38,7 @@ double FFuser(double W, double A){
     // return A / pow(W, 2);
     return A / pow(W, 4);       // W^-8
 }
-double sigma_born_dressed(double W, double psi, double A, double C, double vaccV, double MJ, bool useqf=false){
+double sigma_born_dressed(double W, double psi, double A, double C, double vaccV, double MJ, double Gamma_var, double Gamma_var_ee, bool useqf=false){
     double qf = qf_fixed;
     if (useqf){
         // qf = qf_calc(W);
@@ -49,13 +49,13 @@ double sigma_born_dressed(double W, double psi, double A, double C, double vaccV
     double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2);       //W^-8
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W;       //W^-7
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W*W;       //W^-6
-    complex<double> amp = vaccV + C * 3 * W * W * ee * exp(complex<double>(0, psi)) /
-                          (alpha * MJ * (pow(W, 2) - pow(MJ, 2) + complex<double>(0, MJ * Gamma)));
+    complex<double> amp = vaccV + C * 3 * W * W * Gamma_var_ee * exp(complex<double>(0, psi)) /
+                          (alpha * MJ * (pow(W, 2) - pow(MJ, 2) + complex<double>(0, MJ * Gamma_var)));
     double ampMod2 = pow(abs(amp), 2);
     return norm * cont * ampMod2 * pow(qf,3);
 }
 
-double sigma_born_dressed(double W, double psi, double A, double C, double vaccV, double MJ, TString mode, bool useqf=false){
+double sigma_born_dressed(double W, double psi, double A, double C, double vaccV, double MJ, double Gamma_var, double Gamma_var_ee, TString mode, bool useqf=false){
     // mode 0: total, 1: continuum only, 2: resonance only, 3: interference only
     double qf = qf_fixed;
     if (useqf){
@@ -68,8 +68,8 @@ double sigma_born_dressed(double W, double psi, double A, double C, double vaccV
     double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2);       //W^-8
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W;       //W^-7
     // double cont = PI * pow(alpha, 2) / 6 * pow(FFuser(W, A), 2) * W*W;       //W^-6
-    complex<double> amp_total = vaccV + C * 3 * W * W * ee * exp(complex<double>(0, psi)) /
-                          (alpha * MJ * (pow(W, 2) - pow(MJ, 2) + complex<double>(0, MJ * Gamma)));
+    complex<double> amp_total = vaccV + C * 3 * W * W * Gamma_var_ee * exp(complex<double>(0, psi)) /
+                          (alpha * MJ * (pow(W, 2) - pow(MJ, 2) + complex<double>(0, MJ * Gamma_var)));
     complex<double> amp_cont = vaccV;
     complex<double> amp_res = amp_total - amp_cont;
 
@@ -155,12 +155,12 @@ double narrowCorr(double s){
     return contFactor * rad;
 }
 
-double rho_mJpsi(double m, double W_beam, double psi, double A, double C, double MJ, bool useqf=false){
+double rho_mJpsi(double m, double W_beam, double psi, double A, double C, double MJ, double Gamma_var, double Gamma_var_ee, bool useqf=false){
     double s = S(W_beam);
     double x = X(s, m);
     double vaccValue = vacc(m);
     double radValue = RADIATOR(s, x);
-    double dressedValue = sigma_born_dressed(m, psi, A, C, vaccValue, MJ, useqf);
+    double dressedValue = sigma_born_dressed(m, psi, A, C, vaccValue, MJ, Gamma_var, Gamma_var_ee, useqf);
     return (2.0 * m / s) * radValue * dressedValue;
 }
 
@@ -171,7 +171,9 @@ double integrand_rho_2(double m, void *p){
     double A = params[2];
     double C = params[3];
     double MJ = params[4];
-    return rho_mJpsi(m, W_beam, psi, A, C, MJ, true);
+    double Gamma_var = params[5];
+    double Gamma_var_ee = params[6];
+    return rho_mJpsi(m, W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee, true);
 }
 double integrand_rho_2_noqf(double m, void *p){
     auto *params = static_cast<double *>(p);
@@ -180,9 +182,11 @@ double integrand_rho_2_noqf(double m, void *p){
     double A = params[2];
     double C = params[3];
     double MJ = params[4];
-    return rho_mJpsi(m, W_beam, psi, A, C, MJ, false);
+    double Gamma_var = params[5];
+    double Gamma_var_ee = params[6];
+    return rho_mJpsi(m, W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee, false);
 }
-double anaIntegral_tail(double b, double W_beam, double psi, double A, double C, double MJ, bool useqf=false){
+double anaIntegral_tail(double b, double W_beam, double psi, double A, double C, double MJ, double Gamma_var, double Gamma_var_ee, bool useqf=false){
     double s = S(W_beam);
     double vaccValue = vacc(W_beam);
     double l = LL(s);
@@ -190,19 +194,19 @@ double anaIntegral_tail(double b, double W_beam, double psi, double A, double C,
     double delta2 = DELTA2(l);
     double delta = DELTA(delta2, l);
     
-    double bornValue = sigma_born_dressed(W_beam, psi, A, C, vaccValue, MJ, useqf);
+    double bornValue = sigma_born_dressed(W_beam, psi, A, C, vaccValue, MJ, Gamma_var, Gamma_var_ee, useqf);
     double ana = delta * pow(b, beta) + 1./32. * (beta * beta * b * b) + 1./4. * beta * b * b - 3./16. * beta * beta * b * b * log(1-b) + 1./4. * beta * beta * b * b * log(b) - 5./16. * beta * beta * b - beta * b + 3./4. * beta * beta * b * log(1-b) - beta * beta * b * log(b) - 9./16. * beta * beta * log(1-b) + 1./2. * beta * beta * LI2USER(b);
     return ana * bornValue;
 }
 
 // ---------- main integral with region splitting ------------------------------
 
-double integral_rho_2(double W_beam, double psi, double A, double C, double MJ, bool useqf=false){
+double integral_rho_2(double W_beam, double psi, double A, double C, double MJ, double Gamma_var = Gamma, double Gamma_var_ee = ee, bool useqf=false){
     // workspace for GSL
     const size_t limit = 10000;
     gsl_integration_workspace *w = gsl_integration_workspace_alloc(limit);
 
-    double params[5] = {W_beam, psi, A, C, MJ};
+    double params[7] = {W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee};
     gsl_function F;
     if (useqf){
         F.function = &integrand_rho_2;
@@ -247,7 +251,7 @@ double integral_rho_2(double W_beam, double psi, double A, double C, double MJ, 
     // Region 2: [m_split, m_up] – tiny tail near singular endpoint, use analytical approx.
     double result_tail = 0;
     double b = 1.0 - pow(m_split, 2) / S(W_beam);
-    result_tail = anaIntegral_tail(b, W_beam, psi, A, C, MJ, useqf);
+    result_tail = anaIntegral_tail(b, W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee, useqf);
     // result_tail = 0;
     
 
@@ -257,7 +261,7 @@ double integral_rho_2(double W_beam, double psi, double A, double C, double MJ, 
 }
 
 // Alternative approach: sample 1M points over x = 1 - m^2/s and calculate the integral (Monte Carlo method as in ConExc)
-double integral_rho_2_MC(double W_beam, double psi, double A, double C, double MJ, bool useqf=false, bool narrowCorrFlag=false){
+double integral_rho_2_MC(double W_beam, double psi, double A, double C, double MJ, double Gamma_var = Gamma, double Gamma_var_ee = ee, bool useqf=false, bool narrowCorrFlag=false){
     size_t Npoints = 1000000;
     double s = S(W_beam);
     double m_low = Wm;
@@ -273,7 +277,7 @@ double integral_rho_2_MC(double W_beam, double psi, double A, double C, double M
     for (size_t i = 0; i < Npoints; ++i) {
         double x = dist(rng);
         double m = sqrt(s * (1.0 - x));
-        double integrand = rho_mJpsi(m, W_beam, psi, A, C, MJ, useqf);
+        double integrand = rho_mJpsi(m, W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee, useqf);
         sum += integrand;
     }
 
@@ -298,6 +302,8 @@ void dump_integral_rho_MC(double* fittedParr) {
     double CC1  = fittedParr[1];
     double FF   = fittedParr[3];
     double phi1 = fittedParr[4];
+    double Gamma_var = fittedParr[6];
+    double Gamma_var_ee = fittedParr[7];
 
     std::vector<double> Wvals(nPoints);
     std::vector<double> integrals(nPoints);
@@ -313,7 +319,7 @@ void dump_integral_rho_MC(double* fittedParr) {
         double Wtest = Wvals[i];
         // bool useNarrowCorr = false;
         // if (Wtest > MV - 0.01 && Wtest < MV + 0.01) useNarrowCorr = true;
-        double integral = integral_rho_2_MC(Wtest, phi1, FF, CC1, MJ, true, false);
+        double integral = integral_rho_2_MC(Wtest, phi1, FF, CC1, MJ, Gamma_var, Gamma_var_ee, true, false);
         integrals[i] = integral;
     }
 
@@ -351,10 +357,10 @@ double RADIATORF(double x, double W){
     return term1 + term2 + term3;
 }
 
-double sigma_born_dressed_vt(double x, double W, double psi, double A, double C, double MJ, bool useqf = false){
+double sigma_born_dressed_vt(double x, double W, double psi, double A, double C, double MJ, double Gamma_var, double Gamma_var_ee, bool useqf = false){
     double m = W * sqrt(1-x);
     double vaccValue = vacc(m);
-    return sigma_born_dressed(m, psi, A, C, vaccValue, MJ, useqf);
+    return sigma_born_dressed(m, psi, A, C, vaccValue, MJ, Gamma_var, Gamma_var_ee, useqf);
 }
 
 double integrandF(double x, void* p){
@@ -364,7 +370,9 @@ double integrandF(double x, void* p){
     double A = params[2];
     double C = params[3];
     double MJ = params[4];
-    return RADIATORF(x, W_beam) * sigma_born_dressed_vt(x, W_beam, psi, A, C, MJ, true);
+    double Gamma_var = params[5];
+    double Gamma_var_ee = params[6];
+    return RADIATORF(x, W_beam) * sigma_born_dressed_vt(x, W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee, true);
 }
 double integrandF_noqf(double x, void* p){
     auto *params = static_cast<double *>(p);
@@ -373,15 +381,17 @@ double integrandF_noqf(double x, void* p){
     double A = params[2];
     double C = params[3];
     double MJ = params[4];
-    return RADIATORF(x, W_beam) * sigma_born_dressed_vt(x, W_beam, psi, A, C, MJ, false);
+    double Gamma_var = params[5];
+    double Gamma_var_ee = params[6];
+    return RADIATORF(x, W_beam) * sigma_born_dressed_vt(x, W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee, false);
 }
 
-double integralF(double W_beam, double psi, double A, double C, double MJ, bool useqf = false){
+double integralF(double W_beam, double psi, double A, double C, double MJ, double Gamma_var = Gamma, double Gamma_var_ee = ee, bool useqf = false){
     // workspace for GSL
     const size_t limit = 10000;
     gsl_integration_workspace *w = gsl_integration_workspace_alloc(limit);
 
-    double params[5] = {W_beam, psi, A, C, MJ};
+    double params[7] = {W_beam, psi, A, C, MJ, Gamma_var, Gamma_var_ee};
     gsl_function F;
     if (useqf){
         F.function = &integrandF;
