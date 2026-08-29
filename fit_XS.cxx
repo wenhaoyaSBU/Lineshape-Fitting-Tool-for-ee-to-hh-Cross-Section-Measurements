@@ -2,8 +2,26 @@
 #include "variables.h"
 #include "BrErr.h"
 
-int main()
+int main(int argc, char** argv)
 {
+
+    // Extract command line arguments for whether to perform mixed or EM-only fit
+    bool isEMonly = false; // default to mixed fit
+    if (argc > 1) {
+        std::string arg1 = argv[1];
+        if (arg1 == "EM") {
+            isEMonly = true;
+            std::cout << "Performing EM-only fit." << std::endl;
+        } else if (arg1 == "mixed") {
+            isEMonly = false;
+            std::cout << "Performing mixed fit." << std::endl;
+        } else {
+            std::cerr << "Invalid argument: " << arg1 << ". Use 'EM' for EM-only fit or 'mixed' for mixed fit." << std::endl;
+            return 1;
+        }
+    } else {
+        std::cout << "No fit type specified. Defaulting to mixed fit." << std::endl;
+    }
      
 	auto start = std::chrono::high_resolution_clock::now();
  
@@ -64,6 +82,9 @@ int main()
  
  //   double step0[4]   = { 0.0,0.0,0.0,0.0};
 
+    if(isEMonly) vstart0[1] = 1.00;
+    
+
     for(int i=0;i<pa1;i++)
     {
         vstart[i]=vstart0[i];
@@ -106,7 +127,9 @@ int main()
 
     // PURE EM
     // gMinuit->FixParameter(1);
-    // gMinuit->FixParameter(4);
+    if(isEMonly) {
+        gMinuit->FixParameter(1); // CC1
+    }
 
     if(yerrsyscor[0] == 0) gMinuit->FixParameter(7);
 
@@ -116,6 +139,7 @@ int main()
     {
         nameM[i]="M"+to_string(i);
         gMinuit->mnparm(i+pa1, nameM[i], vstart[i+pa1], step[i+pa1], xdata[i]-15*dEnergy[i],    xdata[i]+15*dEnergy[i],   ierflg);
+        if (dEnergy[i] == 0) gMinuit->FixParameter(i+pa1); // Fix the parameter if no BEMS is available
 
         // For linear approx.
         // gMinuit->FixParameter(i+pa1);
@@ -140,7 +164,24 @@ int main()
         fittedParr[i] = paraValue;
         fittedParrErr[i] = paraError;
     }
-    ofstream outputFile("output/getpoint.txt");
+
+    // Output file names
+    TString outD = "output/";
+    TString gpt = isEMonly ? "getpoint_EM.txt" : "getpoint.txt";
+    TString gpt_con = isEMonly ? "getpoint_con_EM.txt" : "getpoint_con.txt";
+    TString gpt_res = isEMonly ? "getpoint_res_EM.txt" : "getpoint_res.txt";
+    TString gpt_int = isEMonly ? "getpoint_int_EM.txt" : "getpoint_int.txt";
+    TString gpt_dressed = isEMonly ? "getpoint_dressed_EM.txt" : "getpoint_dressed.txt";
+    TString gpt_dressed_con = isEMonly ? "getpoint_dressed_con_EM.txt" : "getpoint_dressed_con.txt";
+    TString gpt_dressed_res = isEMonly ? "getpoint_dressed_res_EM.txt" : "getpoint_dressed_res.txt";
+    TString gpt_dressed_int = isEMonly ? "getpoint_dressed_int_EM.txt" : "getpoint_dressed_int.txt";
+    TString gpt_dressed_int_alt = isEMonly ? "getpoint_dressed_int_alt_EM.txt" : "getpoint_dressed_int_alt.txt";
+    // TString gpt_dressed_res_gammagg = isEMonly ? "getpoint_dressed_res_gammagg_EM.txt" : "getpoint_dressed_res_gammagg.txt";
+    TString outPara = isEMonly ? "fittedParameters_EM.txt" : "fittedParameters.txt";
+    TString outM = isEMonly ? "fittedM_EM.txt" : "fittedM.txt";
+    TString outBr = isEMonly ? "fittedBr_EM.txt" : "fittedBr.txt";
+
+    ofstream outputFile(outD + gpt);
     double startW = 3.05;
     double endW = 3.12;
     int nW = 2000;
@@ -150,17 +191,17 @@ int main()
          outputFile <<setprecision(15)<< i <<"\t"<<Conv(i,fittedParr)<<endl;
     }
     // other components
-    ofstream outputFile_con("output/getpoint_con.txt");
+    ofstream outputFile_con(outD + gpt_con);
     for(double i=startW;i<endW;i=i+step)
     {
          outputFile_con <<setprecision(15)<< i <<"\t"<<Conv_component(i,fittedParr, "con")<<endl;
     }
-    ofstream outputFile_res("output/getpoint_res.txt");
+    ofstream outputFile_res(outD + gpt_res);
     for(double i=startW;i<endW;i=i+step)
     {
          outputFile_res <<setprecision(15)<< i <<"\t"<<Conv_component(i,fittedParr, "res")<<endl;
     }
-    ofstream outputFile_int("output/getpoint_int.txt");
+    ofstream outputFile_int(outD + gpt_int);
     for(double i=startW;i<endW;i=i+step)
     {
          outputFile_int <<setprecision(15)<< i <<"\t"<<Conv_component(i,fittedParr, "int")<<endl;
@@ -168,38 +209,39 @@ int main()
     
 
     // points txt file output
-    ofstream dressedXSFile("output/getpoint_dressed.txt");
+    ofstream dressedXSFile(outD + gpt_dressed);
     for(double i=startW;i<endW;i=i+step)
     {
         double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "total", true);
         dressedXSFile <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
-    ofstream dressedXSFile_con("output/getpoint_dressed_con.txt");
+    ofstream dressedXSFile_con(outD + gpt_dressed_con);
     for(double i=startW;i<endW;i=i+step)
     {
         double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "con", true);
         dressedXSFile_con <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
-    ofstream dressedXSFile_res("output/getpoint_dressed_res.txt");
+    ofstream dressedXSFile_res(outD + gpt_dressed_res);
     for(double i=startW;i<endW;i=i+step)
     {
         double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "res", true);
         dressedXSFile_res <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
-    ofstream dressedXSFile_int("output/getpoint_dressed_int.txt");
+    ofstream dressedXSFile_int(outD + gpt_dressed_int);
     for(double i=startW;i<endW;i=i+step)
     {
         double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "int", true);
         dressedXSFile_int <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
-    ofstream dressedXSFile_intalt("output/getpoint_dressed_int_alt.txt");
+    ofstream dressedXSFile_intalt(outD + gpt_dressed_int_alt);
     for(double i=startW;i<endW;i=i+step)
     {
         double dressedValue = sigma_born_dressed(i, fittedParr[4], fittedParr[3], fittedParr[1], vacc(i), fittedParr[0], "int_alt", true);
         dressedXSFile_intalt <<setprecision(15)<< i <<"\t"<<dressedValue<<endl;
     }
     // gammagg component
-    if(fittedParr[1] > 0){
+    if(fittedParr[1] > 0 && !isEMonly)
+    {
         double Cgammagg = fittedParr[1] - 1;
         ofstream dressedXSFile_res_gammagg("output/getpoint_dressed_res_gammagg.txt");
         for(double i=startW;i<endW;i=i+step)
@@ -213,14 +255,14 @@ int main()
      
 
 
-    ofstream outFilePara("output/fittedParameters.txt");
+    ofstream outFilePara(outD + outPara);
     for(int i = 0; i < numPara; i++){
         outFilePara << setprecision(15) << fittedParr[i] << "\t" << fittedParrErr[i] << endl;
     }
     // Print the fitted chi^2 here
     outFilePara << setprecision(15) << amin << "\t" << 0.0 << endl;
 
-    ofstream outFileM("output/fittedM.txt");
+    ofstream outFileM(outD + outM);
     for(int i = 0; i < Arsize; i++){
         double fittedMvalue, fittedMerror;
         double fittedMshift;
@@ -244,7 +286,7 @@ int main()
               << "BrEM = " << BrEMpost << " +- " << BrEMerr << std::endl;
 
     // Open a file and save the Br and BrEM results
-    ofstream brFile("output/fitted_Br.txt");
+    ofstream brFile(outD + outBr);
     brFile << std::setprecision(15)
             << Brpost   << " \t " << Brerr   << std::endl;
     brFile << std::setprecision(15)

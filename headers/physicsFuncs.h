@@ -687,7 +687,7 @@ void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 
     for (Int_t i= 0; i < Arsize; i++) 
     {   
-       
+            if (dEnergy[i] == 0) continue;
             // chisq = chisq+pow((par[i+total]-xdata[i])/(3*dEnergy[i]),2);
             chisq = chisq+pow((par[i+total]-xdata[i])/(dEnergy[i]),2);
         

@@ -1,1 +1,6 @@
 /output/
+/data/backup/
+.history/
+
+fit_XS
+*.o

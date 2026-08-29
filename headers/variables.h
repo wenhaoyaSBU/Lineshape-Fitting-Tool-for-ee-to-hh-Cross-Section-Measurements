@@ -79,7 +79,7 @@ double Br_std = sqrt(pow(Br_std_sta,2) + pow(Br_std_sys,2));
 
 
 
-const int Arsize=24; // 能量点个数
+const int Arsize=23; // 能量点个数
 // const int numPara = 8;      // FOR GOD SAKE STOP HARDCODING!!!!!
 const int numPara = 10;
 const int Param=Arsize + numPara; // energy pull terms + fitting params
